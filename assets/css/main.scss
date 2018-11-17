@@ -113,15 +113,22 @@ header {
 
   @media only screen and (max-width: 600px){
     nav {
-      background-color: #000;
       width: auto;
+      padding: 0;
+      box-shadow: 4px 4px 8px $nav-color-shadow;
+      transform: translateX(-95%);
+      transition: transform 0.5s ease;
 
       a {
-        display: none;
+        display: block;
       }
     }
 
-    nav:before {
+    nav:hover {
+      transform: translateX(0);
+    }
+
+    /*nav:before {
       content: '=';
       padding: $box-padding;
       display: inline-block;
@@ -131,7 +138,7 @@ header {
 
     nav:hover:before {
       background-color: $nav-color2;
-    }
+    }*/
   }
 }
 
