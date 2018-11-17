@@ -2,9 +2,16 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Ignis</title>
+    <title>{{ page.title }}</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
   </head>
   <body>
-    {{ content }}
+    {% include header.html %}
+    <main>
+      <section>
+        {{ content }}
+      </section>
+    </main>
+    {% include footer.html %}
   </body>
 </html>

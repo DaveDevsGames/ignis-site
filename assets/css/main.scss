@@ -1,0 +1,146 @@
+---
+---
+
+$font-stack: Arial, Helvetica, sans-serif;
+$heading-font-stack: Franklin Gothic Medium, Geneva, sans-serif;
+$text-color-dark: #333;
+$text-color-light: #AAA;
+
+$link-color1: #8a220f;
+$link-color2: #e63819;
+
+$nav-color1: #ff6666;
+$nav-color2: #de514f;
+$nav-color-shadow: #936c6c;
+
+$background-color: rgba(236, 230, 223, 1);
+
+$test-color: #777;
+
+$side-padding: 0 20% 0 20%;
+$box-padding: 1rem;
+
+html, body {
+  height: 100%;
+}
+
+body, p, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+a {
+  color: $link-color1;
+}
+
+a:hover {
+  color: $link-color2;
+}
+
+body {
+  font: 100% $font-stack;
+  color: $text-color-dark;
+  background-color: $background-color;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  padding: $side-padding;
+  flex: 1 0 auto;
+
+  section {
+    padding: $box-padding;
+  }
+}
+
+header, footer {
+  flex: 0 0 auto;
+}
+
+header {
+  text-align: left;
+
+  div {
+    position: relative;
+    z-index: 0;
+    padding: $side-padding;
+    padding-top: 5rem;
+    background-image: url("/assets/images/header-background.png");
+    text-align: center;
+
+    p {
+      position: relative;
+      z-index: 1;
+      font: normal 4rem $heading-font-stack;
+    }
+  }
+
+  div:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 9rem;
+    left: 0;
+    top: 0;
+    background-image: linear-gradient(
+        $background-color 50%,
+        rgba(0, 0, 0, 0) 100%
+    );
+  }
+
+  nav {
+    position: fixed;
+    z-index: 2;
+    width: 100%;
+    margin: 1rem 0 0 0;
+    padding: $side-padding;
+    background-color: $nav-color1;
+    box-shadow: 0px 4px 8px $nav-color-shadow;
+
+    a {
+      padding: $box-padding;
+      display: inline-block;
+      text-decoration: none;
+      color: inherit;
+      transition: background-color 0.5s ease;
+    }
+
+    a:hover {
+      color: inherit;
+      background-color: $nav-color2;
+    }
+  }
+
+  @media only screen and (max-width: 600px){
+    nav {
+      background-color: #000;
+      width: auto;
+
+      a {
+        display: none;
+      }
+    }
+
+    nav:before {
+      content: '=';
+      padding: $box-padding;
+      display: inline-block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    nav:hover:before {
+      background-color: $nav-color2;
+    }
+  }
+}
+
+footer {
+  text-align: center;
+  padding: $side-padding;
+
+  div {
+    padding: $box-padding;
+    background-color: $nav-color1;
+  }
+}
