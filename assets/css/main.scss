@@ -4,6 +4,7 @@
 $font-stack: Arial, Helvetica, sans-serif;
 $heading-font-stack: Franklin Gothic Medium, Geneva, sans-serif;
 $text-color-dark: #333;
+$text-color-mid: #777;
 $text-color-light: #AAA;
 
 $link-color1: #8a220f;
@@ -14,14 +15,23 @@ $nav-color2: #de514f;
 $nav-color-shadow: #936c6c;
 
 $background-color: rgba(236, 230, 223, 1);
+$selection-color: #675c8a;
 
 $test-color: #777;
 
 $side-padding: 0 20% 0 20%;
+$side-padding-mobile: 0 5% 0 5%;
 $box-padding: 1rem;
+
+@mixin media-mobile {
+  @media only screen and (max-width: 1024px) {
+    @content;
+  }
+}
 
 html, body {
   height: 100%;
+  font: 16px $font-stack;
 }
 
 body, p, h1, h2, h3, h4, h5, h6 {
@@ -36,8 +46,12 @@ a:hover {
   color: $link-color2;
 }
 
+::selection {
+  color: white;
+  background-color: $selection-color;
+}
+
 body {
-  font: 100% $font-stack;
   color: $text-color-dark;
   background-color: $background-color;
   display: flex;
@@ -48,9 +62,21 @@ main {
   padding: $side-padding;
   flex: 1 0 auto;
 
+  @include media-mobile {
+    padding: $side-padding-mobile;
+  }
+
   section {
     padding: $box-padding;
   }
+}
+
+article p {
+  margin: 0.5rem;
+  padding-bottom: 0.5rem;
+  text-indent: 0.5rem;
+  text-align: justify;
+  text-align-last: left;
 }
 
 header, footer {
@@ -67,6 +93,11 @@ header {
     padding-top: 5rem;
     background-image: url("/assets/images/header-background.png");
     text-align: center;
+
+    @include media-mobile {
+      padding: $side-padding-mobile;
+      padding-top: 5rem;
+    }
 
     p {
       position: relative;
@@ -97,12 +128,24 @@ header {
     background-color: $nav-color1;
     box-shadow: 0px 4px 8px $nav-color-shadow;
 
+    @include media-mobile {
+      width: auto;
+      padding: 0;
+      box-shadow: 4px 4px 8px $nav-color-shadow;
+      transform: translate(-100%, 3rem);
+      transition: transform 0.5s ease;
+    }
+
     a {
       padding: $box-padding;
       display: inline-block;
       text-decoration: none;
       color: inherit;
       transition: background-color 0.5s ease;
+
+      @include media-mobile {
+        display: block;
+      }
     }
 
     a:hover {
@@ -121,22 +164,8 @@ header {
     background-color: $nav-color1;
     box-shadow: 0px 4px 8px $nav-color-shadow;
     border: 0;
-  }
 
-  @media only screen and (max-width: 750px){
-    nav {
-      width: auto;
-      padding: 0;
-      box-shadow: 4px 4px 8px $nav-color-shadow;
-      transform: translate(-100%, 3rem);
-      transition: transform 0.5s ease;
-
-      a {
-        display: block;
-      }
-    }
-
-    button {
+    @include media-mobile {
       display: block;
     }
   }
@@ -145,6 +174,10 @@ header {
 footer {
   text-align: center;
   padding: $side-padding;
+
+  @include media-mobile {
+    padding: $side-padding-mobile;
+  }
 
   div {
     padding: $box-padding;
