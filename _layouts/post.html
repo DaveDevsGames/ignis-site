@@ -1,0 +1,16 @@
+---
+layout: default
+---
+<article>
+  <h1>{{ page.title }}</h1>
+  <p><time datetime="{{ page.published_date }}">Published on {{ page.published_date | date_to_string }}</time></p>
+  {{ content }}
+  {% assign creation_timestamp = page.creation_date | date: "%s" %}
+  {% assign updated_timestamp = page.updated_date | date: "%s" %}
+  {% if updated_timestamp <= creation_timestamp %}
+  <p><time datetime="{{ page.crateation_date }}">Created on {{ page.creation_date | date_to_string }}</time></p>
+  {% else %}
+  <p><time datetime="{{ page.updated_date }}">Updated on {{ page.updated_date | date_to_string }}</time></p>
+  {% endif %}
+  <p>by {{ page.author }}</p>
+</article>
