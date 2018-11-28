@@ -7,10 +7,12 @@ var nav_open = false;
 nav_button.onclick = function(){
   if(nav_open) {
     nav_box.style.transform = 'translate(-100%, 3rem)';
+    nav_button.innerHTML = '&#9776;';
     nav_open = false;
   }
   else {
     nav_box.style.transform = 'translate(0, 3rem)';
+    nav_button.innerHTML = '&#9587;';
     nav_open = true;
   }
 };

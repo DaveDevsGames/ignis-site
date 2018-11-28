@@ -12,3 +12,5 @@ This is the test post __markdown content__. It features the following _front mat
 * creation_date
 * updated_date
 * published_date
+
+[Go home.](../)
