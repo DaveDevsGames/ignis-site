@@ -102,6 +102,51 @@ article {
     margin: 0.5rem 0 1rem 0;
     padding: 0;
   }
+
+  blockquote {
+    color: $text-color-mid;
+    margin: 1rem 2rem 1rem 1.5rem;
+    padding-left: 0.5rem;
+    border-left: 1px solid $text-color-light;
+
+    @include media-mobile {
+      margin: 1rem 1rem 1rem 0.75rem;
+      padding-left: 0.25rem;
+    }
+
+    p {
+      padding: 0;
+      text-indent: 0;
+    }
+  }
+
+  table {
+    border: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 1rem 1.5rem 1rem 1.5rem;
+    table-layout: fixed;
+    width: calc(100% - 3rem);
+
+    @include media-mobile {
+      margin: 1rem 1rem 1rem 1rem;
+      width: calc(100% - 2rem);
+    }
+  }
+
+  th, td {
+    border: 1px solid $text-color-light;
+    padding: 0.5rem;
+  }
+
+  th {
+    border-bottom: 3px double $text-color-light;
+    padding: 0.5rem;
+  }
+
+  tr:nth-child(even) {
+    background-color: white;
+  }
 }
 
 header, footer {
@@ -201,6 +246,7 @@ footer {
   text-align: center;
   color: $text-color-light;
   background-color: $text-color-dark;
+  background-image: url("/assets/images/footer-background.png");
   border-top: 2px solid $nav-color2;
 
   div {
