@@ -24,3 +24,11 @@ This is the test post __markdown content__. It features the following _front mat
 | you    | are?    | you're |
 | in     | the     | jungle |
 | you're | gonna   | die    |
+
+![Test Image1][test1]
+![Test Image2][test2]
+![Test Image3][test3]
+
+[test1]: /assets/images/test-image1.jpg#center
+[test2]: /assets/images/test-image2.jpg#center
+[test3]: /assets/images/test-image3.jpg#center

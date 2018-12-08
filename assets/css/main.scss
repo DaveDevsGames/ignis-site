@@ -147,6 +147,89 @@ article {
   tr:nth-child(even) {
     background-color: white;
   }
+
+  // Overrule the paragraph indent when an image is the first element.
+  p > img:first-of-type {
+    margin-left: -0.5rem;
+  }
+
+  img {
+    max-width: 100%;
+    padding: 0;
+    border-radius: 0.5rem;
+    background-color: $text-color-light;
+  }
+
+  img:hover {
+    cursor: zoom-in;
+  }
+
+  // Dirty hack to allow centering from markdown by sticking #center anchor
+  // on image urls.
+  p > img[src*='#center']:first-of-type {
+      display: block;
+      margin: auto;
+  }
+
+  img[src*='#center'] {
+      display: block;
+      margin: auto;
+  }
+}
+
+@keyframes modal-anim {
+  0% {transform: scale(1.1); border-radius: 0 80% 0 0; box-shadow: 45px -45px 45px black;}
+  100% {transform: scale(1); border-radius: 0 0 0 0; box-shadow: 3px -3px 3px black;}
+}
+
+#modal {
+  margin: 0;
+  position: fixed;
+  z-index: 99;
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.75) 100%), url("/assets/images/modal-background.png");
+  width: 100%;
+  height: calc(100vh - 4rem);
+  display: none;
+  text-align: center;
+  padding-top: 4rem;
+  overflow-y: auto;
+
+  button {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $text-color-light;
+    margin: 0.5rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: transparent;
+    border: 0;
+  }
+
+  button:focus {
+    outline: 0;
+  }
+
+  button:hover {
+    color: white;
+  }
+
+  figcaption {
+    color: $text-color-light;
+    font-size: 1rem;
+    padding: 0.2rem;
+  }
+
+  img {
+    max-width: 100%;
+    background-color: $text-color-dark;
+    box-shadow: 3px -3px 3px black;
+    animation: modal-anim 0.5s;
+
+    @include media-mobile {
+      animation: none;
+    }
+  }
 }
 
 header, footer {
@@ -177,7 +260,7 @@ header {
     }
   }
 
-  div:after {
+  div::after {
     content: '';
     position: absolute;
     width: 100%;
