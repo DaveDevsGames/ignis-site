@@ -12,6 +12,14 @@ title: Latest Content
         <img src="{{ post.image }}"></img>
       </a>
       <p>{{ post.blurb }}</p>
+      <aside>{% assign published_timestamp = post.published_date | date: "%s" %}
+      {% assign updated_timestamp = post.updated_date | date: "%s" %}
+      {% if updated_timestamp <= published_timestamp %}
+      Published on <time datetime="{{ post.published_date }}">{{ post.published_date | date_to_string }}</time>
+      {% else %}
+      Updated on <time datetime="{{ post.updated_date }}">{{ post.updated_date | date_to_string }}</time>
+      {% endif %}
+      by {{ post.author }}</aside>
     </li>
     {% endfor %}
   </ol>

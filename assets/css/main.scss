@@ -80,34 +80,47 @@ main {
   }
 
   ol {
+    width: 100%;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-flow: wrap;
+    background-image: linear-gradient(
+        to right,
+        transparent 50%,
+        $text-color-light 50%,
+        $text-color-light calc(50% + 1px),
+        transparent calc(50% + 1px),
+    );
+
+    @include media-mobile {
+      display: block;
+      background-image: none;
+    }
   }
 
   li {
+    display: flex;
+    flex-direction: column;
+    width: calc(50% - 4rem);
     list-style-type: none;
-    border-width: 1px;
-    border-style: dashed;
-    border-color: transparentize($nav-color1, 0.45);
     border-radius: 0.5rem;
     padding: 1rem;
-    margin-bottom: 1rem;
+    margin: 0 1rem 1rem 1rem;
+
+    @include media-mobile {
+      width: calc(100% - 4rem);
+    }
   }
 
-  li:nth-child(1) {
-    border: 1px solid $nav-color1;
-  }
-
-  li:nth-child(2) {
-    border-color: transparentize($nav-color1, 0.15);
-  }
-
-  li:nth-child(3) {
-    border-color: transparentize($nav-color1, 0.3);
+  li:hover {
+    background-color: transparentize($nav-color1, 0.95);
   }
 
   a {
     text-decoration: none;
+    color: inherit;
+    flex: 0 0 auto;
   }
 
   h2 {
@@ -115,17 +128,37 @@ main {
     font: normal 1.5rem $heading-font-stack;
   }
 
+  h2:hover {
+    text-decoration: underline;
+  }
+
   img {
     width: 100%;
     height: 8rem;
+    border: 1px solid transparent;
     object-fit: cover;
+    //object-position: 0% 0%;
     margin-bottom: 1rem;
     border-radius: 0.5rem;
-    background-color: $text-color-light;
+  }
+
+  img:hover {
+    border: 1px solid $text-color-dark;
+  }
+
+  aside {
+    color: $text-color-light;
+    font-size: 0.75rem;
+    font-style: italic;
+    padding-top: 1rem;
+    margin: 0.5rem;
+    text-align: right;
+    flex: 0 0 auto;
   }
 
   p {
     text-indent: 0.5rem;
+    flex: 1 0 auto;
   }
 }
 
