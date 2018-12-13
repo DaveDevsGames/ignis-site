@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<article>
+  <h1>{{ page.title }}</h1>
+  <aside>{% assign published_timestamp = page.published_date | date: "%s" %}
+  {% assign updated_timestamp = page.updated_date | date: "%s" %}
+  {% if updated_timestamp <= published_timestamp %}
+  Published on <time datetime="{{ page.published_date }}">{{ page.published_date | date_to_string }}</time>
+  {% else %}
+  Updated on <time datetime="{{ page.updated_date }}">{{ page.updated_date | date_to_string }}</time>
+  {% endif %}
+  by {{ page.author }}</aside>
+  <hr>
+  {{ content }}
+  <script src="/assets/script/img.js"></script>
+</article>
