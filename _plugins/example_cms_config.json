@@ -1,0 +1,6 @@
+{
+  "api_uri": "https://localhost/",
+  "api_token": "staticToken",
+  "api_posts_endpoint": "items/posts",
+  "api_authors_endpoint": "users"
+}
