@@ -10,6 +10,7 @@ Jekyll::Hooks.register :site, :after_init do |site|
 
   # Look at existing posts and remove any with front matter that flags them as
   # content from the CMS.
+  Jekyll.logger.info "Deleting old CMS posts..."
   Dir.entries(target_dir).each do |post_filename|
     post_file_path = File.join(target_dir, post_filename)
     if File.file?post_file_path
@@ -24,26 +25,33 @@ Jekyll::Hooks.register :site, :after_init do |site|
 
   # Reading temporary local file for testing. To be replaced with data pulled
   # via a RESTful API.
+  Jekyll.logger.info "Downloading CMS posts..."
   json_posts = JSON.parse(File.read(File.join(__dir__, 'content-test.json')))['posts']
 
   # Create a new file for each post from the CMS. Matching Jekyll's naming
   # convention for blog posts to allow it to take over the rest of the build.
   # Layout and the CMS flag front matter are added to the pulled front matter.
+  Jekyll.logger.info "Creating fresh CMS posts..."
   json_posts.each do |post|
     post_datetime = DateTime.strptime(post['published_date'], "%Y-%m-%d %H:%M:%S")
     post_filename = post_datetime.strftime("%Y-%m-%d") << '-' << post['title'].gsub(/\s+/, '').downcase << '.md'
-    post_file = File.open(File.join(target_dir, post_filename), 'w')
-    post_file.puts '---'
-    post_file.puts "#{flag_front_matter}: true"
-    post_file.puts "layout: #{post_layout}"
-    post.each_pair do |front_matter, value|
-      if front_matter == 'content'
-        next
+    post_file_path = File.join(target_dir, post_filename)
+    if File.file?post_file_path
+      Jekyll.logger.warn "A post named #{post_filename} already exists. Skipped"
+    else
+      post_file = File.open(File.join(target_dir, post_filename), 'w')
+      post_file.puts '---'
+      post_file.puts "#{flag_front_matter}: true"
+      post_file.puts "layout: #{post_layout}"
+      post.each_pair do |front_matter, value|
+        if front_matter == 'content'
+          next
+        end
+        post_file.puts "#{front_matter}: #{value}"
       end
-      post_file.puts "#{front_matter}: #{value}"
+      post_file.puts '---'
+      post_file.puts post['content']
+      post_file.close
     end
-    post_file.puts '---'
-    post_file.puts post['content']
-    post_file.close
   end
 end
