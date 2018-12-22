@@ -29,15 +29,17 @@ def clear_api_posts
   rescue
     Jekyll.logger.error "CMS Config:", "Config file is malformed."
   else
-    Dir.entries(posts_dir).each do |post_filename|
-      post_file_path = File.join(posts_dir, post_filename)
-      if File.file?post_file_path
-        post_file_content = File.read(post_file_path)
-        post_file_content =~ YAML_FRONT_MATTER_REGEXP
-        post_front_matter = YAML.load($1)
-        if post_front_matter.has_key? front_matter_flag
-          File.delete(post_file_path)
-          num_cleared += 1
+    if Dir.exist? posts_dir
+      Dir.entries(posts_dir).each do |post_filename|
+        post_file_path = File.join(posts_dir, post_filename)
+        if File.file?post_file_path
+          post_file_content = File.read(post_file_path)
+          post_file_content =~ YAML_FRONT_MATTER_REGEXP
+          post_front_matter = YAML.load($1)
+          if post_front_matter.has_key? front_matter_flag
+            File.delete(post_file_path)
+            num_cleared += 1
+          end
         end
       end
     end
@@ -215,6 +217,7 @@ Jekyll::Hooks.register :site, :after_init do |site|
     # Layout and the CMS flag front matter are added to the pulled front matter.
     Jekyll.logger.info "Create CMS posts..."
     begin
+      FileUtils.mkdir_p $json_config['posts_dir']
       FileUtils.mkdir_p $json_config['image_dir']
     rescue
       Jekyll.logger.error "CMS Config:", "Config file is malformed."
