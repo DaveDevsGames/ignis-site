@@ -101,6 +101,21 @@ def get_api_files
   return nil
 end
 
+def to_local_uri(remote_uri)
+  begin
+    api_filestore_uri = $json_config['api_filestore_uri']
+    image_dir = $json_config['image_dir']
+  rescue
+    Jekyll.logger.error "CMS Config:", "Config file is malformed."
+  else
+    sp_char_regex = /(\.|\/|\\|\?|\~|\+|\*|\!|\')/
+    api_filestore_uri = api_filestore_uri.gsub(sp_char_regex) {|m| "\\" + m}
+    local_uri = remote_uri.gsub(/#{api_filestore_uri}/, '/' << image_dir << '/')
+    return true, local_uri
+  end
+  return false, remote_uri
+end
+
 def fetch_image(file_id, files)
   begin
     image_dir = $json_config['image_dir']
@@ -233,6 +248,8 @@ Jekyll::Hooks.register :site, :after_init do |site|
     next
   end
   Jekyll.logger.debug "CMS Success!"
+
+  puts to_local_uri "http://192.168.126.128/uploads/_/originals/exorcism_room.png"
 end
 
 Jekyll::Hooks.register :site, :post_write do |site|
