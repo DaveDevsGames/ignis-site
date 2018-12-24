@@ -4,7 +4,9 @@ require 'open-uri'
 require 'fileutils'
 
 YAML_FRONT_MATTER_REGEXP = %r!\A(---\s*\n.*?\n?)^((---|\.\.\.)\s*$\n?)!m.freeze
-FILENAME_REGEXP = /[\w.]+$/.freeze
+FILENAME_REGEXP = /[\w\.]+$/.freeze
+HTTP_URI_REGEXP = /(http:\/\/|https:\/\/)(\w|-|\.|~|:|\/|\?|#|\[|\]|@|!|\$|&|'|\(|\)|\*|\+|,|;|=)+/.freeze
+URI_ESCAPE_REGEX = /(\.|\/|\?|\[|\]|\$|\(|\)|\*|\+)/.freeze
 
 $json_config = nil
 
@@ -101,45 +103,43 @@ def get_api_files
   return nil
 end
 
-def to_local_uri(remote_uri)
+def fetch_file(file_id, files)
   begin
-    api_filestore_uri = $json_config['api_filestore_uri']
-    image_dir = $json_config['image_dir']
+    files_dir = $json_config['files_dir']
   rescue
     Jekyll.logger.error "CMS Config:", "Config file is malformed."
   else
-    sp_char_regex = /(\.|\/|\\|\?|\~|\+|\*|\!|\')/
-    api_filestore_uri = api_filestore_uri.gsub(sp_char_regex) {|m| "\\" + m}
-    local_uri = remote_uri.gsub(/#{api_filestore_uri}/, '/' << image_dir << '/')
-    return true, local_uri
-  end
-  return false, remote_uri
-end
-
-def fetch_image(file_id, files)
-  begin
-    image_dir = $json_config['image_dir']
-  rescue
-    Jekyll.logger.error "CMS Config:", "Config file is malformed."
-  else
-    image_uri = files[file_id]
-    if image_uri != nil
-      image_filename = FILENAME_REGEXP.match(image_uri)[0]
-      if image_filename != nil
-        image_filepath = File.join(image_dir, image_filename)
-        File.open(image_filepath, 'wb') do |image_file|
-          image_file << open(image_uri).read
+    file_uri = files[file_id]
+    if file_uri != nil
+      filename = FILENAME_REGEXP.match(file_uri)[0]
+      if filename != nil
+        filepath = File.join(files_dir, filename)
+        File.open(filepath, 'wb') do |file|
+          file << open(file_uri).read
         end
-        Jekyll.logger.info "CMS Image:", "#{image_filepath}"
-        return image_filepath
+        Jekyll.logger.info "CMS File:", "#{filepath}"
+        return filepath
       else
-        Jekyll.logger.error "CMS Image:", "#{image_uri} has no valid filename."
+        Jekyll.logger.error "CMS File:", "#{file_uri} has no valid filename."
       end
     else
-      Jekyll.logger.error "CMS Image:", "No image with id #{file_id}"
+      Jekyll.logger.error "CMS File:", "No file with id #{file_id}"
     end
   end
   return nil
+end
+
+def replace_file_uris(source_str, files)
+  output_str = source_str
+  begin
+    api_filestore_uri = $json_config['api_filestore_uri']
+  rescue
+    Jekyll.logger.error "CMS Config:", "Config file is malformed."
+  else
+    filestore_regex = api_filestore_uri.gsub(URI_ESCAPE_REGEX) {|match| "\\" + match}
+    #output_str = output_str.gsub(HTTP_URI_REGEXP) {|match| filestore_regex.match(match).size > 0 ? fetch_file(match, files) : match}
+  end
+  return output_str
 end
 
 def create_post(cms_post, authors, files)
@@ -172,7 +172,7 @@ def create_post(cms_post, authors, files)
           elsif front_matter == 'author'
             post_file.puts "#{front_matter}: #{authors[value]}"
           elsif front_matter == 'image_head'
-            file_uri = fetch_image value, files
+            file_uri = fetch_file value, files
             if file_uri != nil
               post_file.puts "#{front_matter}: #{file_uri}"
             end
@@ -181,7 +181,7 @@ def create_post(cms_post, authors, files)
           end
         end
         post_file.puts '---'
-        post_file.puts cms_post['markdown_content']
+        post_file.puts replace_file_uris(cms_post['markdown_content'], files)
         post_file.close
         Jekyll.logger.info "Post:", "Created #{post_filename}"
         return post_file_path
@@ -233,7 +233,7 @@ Jekyll::Hooks.register :site, :after_init do |site|
     Jekyll.logger.info "Create CMS posts..."
     begin
       FileUtils.mkdir_p $json_config['posts_dir']
-      FileUtils.mkdir_p $json_config['image_dir']
+      FileUtils.mkdir_p $json_config['files_dir']
     rescue
       Jekyll.logger.error "CMS Config:", "Config file is malformed."
       Jekyll.logger.error "Abort CMS..."
@@ -248,17 +248,15 @@ Jekyll::Hooks.register :site, :after_init do |site|
     next
   end
   Jekyll.logger.debug "CMS Success!"
-
-  puts to_local_uri "http://192.168.126.128/uploads/_/originals/exorcism_room.png"
 end
 
 Jekyll::Hooks.register :site, :post_write do |site|
   Jekyll.logger.debug "Tidy CMS..."
   if parse_json_config
     begin
-      FileUtils.remove_dir($json_config['image_dir'], force=true)
+      FileUtils.remove_dir($json_config['files_dir'], force=true)
     rescue
-      Jekyll.logger.error "Temp Images: Failed to delete."
+      Jekyll.logger.error "Temp Files: Failed to delete."
     end
   end
 end

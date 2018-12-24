@@ -1,6 +1,6 @@
 {
   "posts_dir": "_posts",
-  "image_dir": "assets/images/cms",
+  "files_dir": "assets/cms",
   "front_matter_flag": "directus",
   "front_matter_layout": "post",
   "api_uri": "https://localhost/project/",
